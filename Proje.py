@@ -797,6 +797,8 @@ def assistant_page() -> None:
 
     if query:
         matches: list[tuple[str, str]] = []
+
+        # Dosya sisteminde ara
         notes_dir = DATA_DIR / "notes"
         if notes_dir.exists():
             for md in notes_dir.glob("*.md"):
@@ -804,14 +806,22 @@ def assistant_page() -> None:
                 if query.lower() in txt.lower():
                     matches.append((md.stem, md.name))
 
+        # Builtin notlarda ara (data/ klasörü olmasa da çalışır)
+        for topic_id, note in BUILTIN_NOTES.items():
+            already = any(m[0] == topic_id for m in matches)
+            if not already:
+                txt = builtin_notes_md(topic_id)
+                if query.lower() in txt.lower():
+                    matches.append((topic_id, note.title))
+
         if matches:
-            st.success(f"{len(matches)} not dosyasında eşleşme bulundu.")
-            for topic_id, fname in matches[:20]:
-                st.markdown(f"- `{fname}`")
+            st.success(f"{len(matches)} konuda eşleşme bulundu.")
+            for topic_id, label in matches[:20]:
+                st.markdown(f"**{label}**")
                 st.markdown(load_topic_markdown(topic_id)[:800] + "…")
                 st.divider()
         else:
-            st.info("Notlarda doğrudan eşleşme bulunamadı.")
+            st.info("Hiçbir konuda eşleşme bulunamadı.")
 
     st.divider()
     st.subheader("Çözüm dene (SymPy)")
@@ -849,4 +859,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
