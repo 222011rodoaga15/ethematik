@@ -7,7 +7,7 @@ Bu Ethem ve Rodin tarafından geliştirilen, 2026 maarif model kapsamlı 9. 10. 
 # Python kurulumu
 Python'ı kurmak için işletim sisteminize göre aşağıdaki komutları kullanabilirsiniz.
 
-## Bu arch'ıArch için:
+## Arch için:
 sudo pacman -S python
 
 ## Debian/Ubuntu için:
